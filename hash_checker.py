@@ -47,7 +47,7 @@ ART = r"""
 """
 
 
-def calculate_file_hash(file_path, hash_type) -> str:
+def calculate_file_hash(file_path: str, hash_type: str) -> str:
     """Calculates the hash of a file.
 
     Args:
@@ -65,7 +65,7 @@ def calculate_file_hash(file_path, hash_type) -> str:
     return hash_obj.hexdigest()
 
 
-def check_hashes(hash1, hash2):
+def check_hashes(hash1: str, hash2: str) -> bool:
     """Compares two different hashes (strings) 
     in a case-insensitive manner.
 
@@ -77,13 +77,10 @@ def check_hashes(hash1, hash2):
         bool: Returns True if the hashes (strings) are the same, 
         and False otherwise.
     """
-    if hash1.lower() == hash2.lower():
-        return True
-    else:
-        return False
+    return hash1.lower() == hash2.lower()
 
 
-def main():
+def main() -> None:
     print(ART)
 
     # Выбор языка / Language selection
