@@ -40,12 +40,18 @@ ART = r"""
 |_|  |_/_/    \_\_____/|_|  |_|    \_____|_|  |_|______\_____|_|\_\______|_|  \_\
 """
 
+HELP = """
+/h - help (список команд)
+/q или Ctrl-C - exit (выход)
+/t - change the type of hash (сменить тип хэша)
+/c - enable or disable comparison (включить или выключить сравнение)"""
 
-def calculate_file_hash(file_path: str, hash_type: str) -> str:
+
+def calculate_file_hash(user_input: str, hash_type: str) -> str:
     """Calculates the hash of a file.
 
     Args:
-        file_path (str): Accepts a string of the form \
+        user_input (str): Accepts a string of the form \
             like "C:\\Downloads\\file.exe".
         hash_type (str): Specifies the hash type.
 
@@ -53,7 +59,7 @@ def calculate_file_hash(file_path: str, hash_type: str) -> str:
         str: Hexadecimal hash string
     """
     hash_obj = hl.new(hash_type)
-    with open(file_path, "rb") as f:
+    with open(user_input, "rb") as f:
         while chunk := f.read(4096):
             hash_obj.update(chunk)
     return hash_obj.hexdigest()
@@ -104,15 +110,20 @@ def main() -> None:
         while True:
             try:
                 # Путь к файлу / File path
-                file_path = input("\n" + lang_dict["path_prompt"]).strip()
+                user_input = input("\n" + lang_dict["path_prompt"]).strip()
+
+                if user_input.startswith("/"):
+                    pass
+                else:
+                    pass
 
                 # Очистка от кавычек / Clearing quotes
-                if (file_path.startswith('"') and file_path.endswith('"')) or (
-                    file_path.startswith("'") and file_path.endswith("'")
-                ):
-                    file_path = file_path[1:-1]
+                if (
+                    user_input.startswith('"') and user_input.endswith('"')
+                ) or (user_input.startswith("'") and user_input.endswith("'")):
+                    user_input = user_input[1:-1]
                 # Вычисление хэша / Calculating a hash
-                file_hash = calculate_file_hash(file_path, hash_type)
+                file_hash = calculate_file_hash(user_input, hash_type)
 
                 if comparison == "y":
                     # Получить хэш от пользователя / Get a hash from a user
