@@ -104,7 +104,7 @@ def main() -> None:
         while True:
             try:
                 # Путь к файлу / File path
-                file_path = input(lang_dict["path_prompt"]).strip()
+                file_path = input("\n" + lang_dict["path_prompt"]).strip()
 
                 # Очистка от кавычек / Clearing quotes
                 if (file_path.startswith('"') and file_path.endswith('"')) or (
@@ -118,13 +118,8 @@ def main() -> None:
                     # Получить хэш от пользователя / Get a hash from a user
                     user_hash = input(lang_dict["hash_prompt"]).strip()
 
-                    print(
-                        "-----------------------------------------------",
-                        end="",
-                    )
-                    print(
-                        "------------------------------------------------------------"
-                    )
+                    n_sep = 107
+                    print("-" * n_sep)
 
                     # Вывести для сравнения / Display for comparison
                     print(f"{lang_dict['display_file_hash']}{file_hash}")
