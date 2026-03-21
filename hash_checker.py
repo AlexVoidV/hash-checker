@@ -13,7 +13,6 @@ LANGS = {
         "result_mismatch": "Hash does NOT match!",
         "display_file_hash": "Hash of the specified file: ",
         "display_user_hash": "Entered hash:               ",
-        "exit_instructions": "To exit, press <q>",
         "select_hash": "Select the desired hash type: ",
         "hash_comparison": "Need a hash comparison? ",
     },
@@ -25,7 +24,6 @@ LANGS = {
         "result_mismatch": "Хэш не совпал!",
         "display_file_hash": "Хэш указанного файла: ",
         "display_user_hash": "Введённый хэш:        ",
-        "exit_instructions": "Чтобы выйти, нажмите <q>",
         "select_hash": "Выберите нужный тип хэша: ",
         "hash_comparison": "Требуется сравнение хэша? ",
     },
@@ -76,7 +74,7 @@ def check_hashes(hash1: str, hash2: str) -> bool:
     return hash1.lower() == hash2.lower()
 
 
-# TODO: 1. Rework exit (Ctrl-C) 2. Cycle for main() 3. New input system
+# TODO: 1. New input system
 def main() -> None:
     try:
         print(ART)
@@ -103,8 +101,6 @@ def main() -> None:
             input(lang_dict["hash_comparison"] + "(y / n): ").strip().lower()
         )
 
-        print(lang_dict["exit_instructions"])
-
         while True:
             try:
                 # Путь к файлу / File path
@@ -117,30 +113,33 @@ def main() -> None:
                     file_path = file_path[1:-1]
                 # Вычисление хэша / Calculating a hash
                 file_hash = calculate_file_hash(file_path, hash_type)
-                break
+
+                if comparison == "y":
+                    # Получить хэш от пользователя / Get a hash from a user
+                    user_hash = input(lang_dict["hash_prompt"]).strip()
+
+                    print(
+                        "-----------------------------------------------",
+                        end="",
+                    )
+                    print(
+                        "------------------------------------------------------------"
+                    )
+
+                    # Вывести для сравнения / Display for comparison
+                    print(f"{lang_dict['display_file_hash']}{file_hash}")
+                    print(f"{lang_dict['display_user_hash']}{user_hash}")
+
+                    # Результат / Result
+                    if check_hashes(file_hash, user_hash):
+                        print(lang_dict["result_match"])
+                    else:
+                        print(lang_dict["result_mismatch"])
+                else:
+                    print(f"\n{file_hash}")
             except FileNotFoundError:
                 print(lang_dict["file_not_found"])
 
-        if comparison == "y":
-            # Получить хэш от пользователя / Get a hash from a user
-            user_hash = input(lang_dict["hash_prompt"]).strip()
-
-            print("-----------------------------------------------", end="")
-            print(
-                "------------------------------------------------------------"
-            )
-
-            # Вывести для сравнения / Display for comparison
-            print(f"{lang_dict['display_file_hash']}{file_hash}")
-            print(f"{lang_dict['display_user_hash']}{user_hash}")
-
-            # Результат / Result
-            if check_hashes(file_hash, user_hash):
-                print(lang_dict["result_match"])
-            else:
-                print(lang_dict["result_mismatch"])
-        else:
-            print(f"\n{file_hash}")
     except KeyboardInterrupt:
         sys.exit()
 
