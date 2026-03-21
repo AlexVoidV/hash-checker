@@ -15,6 +15,8 @@ LANGS = {
         "display_user_hash": "Entered hash:               ",
         "select_hash": "Select the desired hash type: ",
         "hash_comparison": "Need a hash comparison? ",
+        "hash_changed": "Hash type changed to ",
+        "comparison": "Comparison is now ",
     },
     "ru": {
         "path_prompt": "Укажите путь к файлу: ",
@@ -26,6 +28,8 @@ LANGS = {
         "display_user_hash": "Введённый хэш:        ",
         "select_hash": "Выберите нужный тип хэша: ",
         "hash_comparison": "Требуется сравнение хэша? ",
+        "hash_changed": "Тип хэша сменён на ",
+        "comparison": "Сравнение теперь ",
     },
 }
 
@@ -41,10 +45,10 @@ ART = r"""
 """
 
 HELP = """
-/h - help (список команд)
-/q или Ctrl-C - exit (выход)
-/t - change the type of hash (сменить тип хэша)
-/c - enable or disable comparison (включить или выключить сравнение)"""
+/h – help (список команд)
+/q or (или) Ctrl-C – exit (выход)
+/t – change the type of hash (сменить тип хэша)
+/c – enable or disable comparison (включить или выключить сравнение)"""
 
 
 def calculate_file_hash(user_input: str, hash_type: str) -> str:
@@ -80,10 +84,10 @@ def check_hashes(hash1: str, hash2: str) -> bool:
     return hash1.lower() == hash2.lower()
 
 
-# TODO: 1. New input system
 def main() -> None:
     try:
         print(ART)
+        print(f"{HELP}", end="\n\n")
 
         # Выбор языка / Language selection
         lang_choice = (
@@ -97,15 +101,8 @@ def main() -> None:
         # Выбранный словарь / Selected dictionary
         lang_dict = LANGS[lang_choice]
 
-        # Выбор хэша / Hash selection
-        hash_type = input(
-            "1 (SHA256) | 2 (MD5) | 3 (SHA1)\n" + lang_dict["select_hash"]
-        ).strip()
-        hash_type = HASHES.get(hash_type, "sha256")
-
-        comparison = (
-            input(lang_dict["hash_comparison"] + "(y / n): ").strip().lower()
-        )
+        hash_type = "sha256"  # По умолчанию / Default
+        comparison = "n"  # По умолчанию / Default
 
         while True:
             try:
@@ -113,36 +110,63 @@ def main() -> None:
                 user_input = input("\n" + lang_dict["path_prompt"]).strip()
 
                 if user_input.startswith("/"):
-                    pass
+                    if user_input == "/q":
+                        break
+                    elif user_input == "/h":
+                        print(HELP)
+                        continue
+                    elif user_input == "/t":
+                        # Выбор хэша / Hash selection
+                        hash_type = input(
+                            "1 (SHA256) | 2 (MD5) | 3 (SHA1)\n"
+                            + lang_dict["select_hash"]
+                        ).strip()
+                        hash_type = HASHES.get(hash_type, "sha256")
+                        print(
+                            "[INFO]: " + lang_dict["hash_changed"] + hash_type
+                        )
+                        continue
+                    elif user_input == "/c":
+                        comparison = (
+                            input(lang_dict["hash_comparison"] + "(y / n): ")
+                            .strip()
+                            .lower()
+                        )
+                        print(
+                            "[INFO]: "
+                            + lang_dict["comparison"]
+                            + f"<{comparison}>"
+                        )
+                        continue
                 else:
-                    pass
+                    # Очистка от кавычек / Clearing quotes
+                    if (
+                        user_input.startswith('"') and user_input.endswith('"')
+                    ) or (
+                        user_input.startswith("'") and user_input.endswith("'")
+                    ):
+                        user_input = user_input[1:-1]
+                    # Вычисление хэша / Calculating a hash
+                    file_hash = calculate_file_hash(user_input, hash_type)
 
-                # Очистка от кавычек / Clearing quotes
-                if (
-                    user_input.startswith('"') and user_input.endswith('"')
-                ) or (user_input.startswith("'") and user_input.endswith("'")):
-                    user_input = user_input[1:-1]
-                # Вычисление хэша / Calculating a hash
-                file_hash = calculate_file_hash(user_input, hash_type)
+                    if comparison == "y":
+                        # Получить хэш от пользователя / Get a hash from a user
+                        user_hash = input(lang_dict["hash_prompt"]).strip()
 
-                if comparison == "y":
-                    # Получить хэш от пользователя / Get a hash from a user
-                    user_hash = input(lang_dict["hash_prompt"]).strip()
+                        n_sep = 107
+                        print("-" * n_sep)
 
-                    n_sep = 107
-                    print("-" * n_sep)
+                        # Вывести для сравнения / Display for comparison
+                        print(f"{lang_dict['display_file_hash']}{file_hash}")
+                        print(f"{lang_dict['display_user_hash']}{user_hash}")
 
-                    # Вывести для сравнения / Display for comparison
-                    print(f"{lang_dict['display_file_hash']}{file_hash}")
-                    print(f"{lang_dict['display_user_hash']}{user_hash}")
-
-                    # Результат / Result
-                    if check_hashes(file_hash, user_hash):
-                        print(lang_dict["result_match"])
+                        # Результат / Result
+                        if check_hashes(file_hash, user_hash):
+                            print(lang_dict["result_match"])
+                        else:
+                            print(lang_dict["result_mismatch"])
                     else:
-                        print(lang_dict["result_mismatch"])
-                else:
-                    print(f"\n{file_hash}")
+                        print(f"\n{file_hash}")
             except FileNotFoundError:
                 print(lang_dict["file_not_found"])
 
