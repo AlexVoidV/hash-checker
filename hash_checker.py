@@ -15,7 +15,7 @@ LANGS = {
         "display_user_hash": "Entered hash:               ",
         "exit_instructions": "To exit, press <q>",
         "select_hash": "Select the desired hash type: ",
-        "hash_comparison": "Need a hash comparison?"
+        "hash_comparison": "Need a hash comparison?",
     },
     "ru": {
         "path_prompt": "Укажите путь к файлу: ",
@@ -27,15 +27,11 @@ LANGS = {
         "display_user_hash": "Введённый хэш:        ",
         "exit_instructions": "Чтобы выйти, нажмите <q>",
         "select_hash": "Выберите нужный тип хэша: ",
-        "hash_comparison": "Требуется сравнение хэша?"
-    }
+        "hash_comparison": "Требуется сравнение хэша?",
+    },
 }
 
-HASHES = {
-    "1": "sha256",
-    "2": "md5",
-    "3": "sha1"
-}
+HASHES = {"1": "sha256", "2": "md5", "3": "sha1"}
 
 ART = r"""
  _    _           _____ _    _      _____ _    _ ______ _____ _  ________ _____  
@@ -66,7 +62,7 @@ def calculate_file_hash(file_path: str, hash_type: str) -> str:
 
 
 def check_hashes(hash1: str, hash2: str) -> bool:
-    """Compares two different hashes (strings) 
+    """Compares two different hashes (strings)
     in a case-insensitive manner.
 
     Args:
@@ -74,18 +70,20 @@ def check_hashes(hash1: str, hash2: str) -> bool:
         hash2 (str): The hash entered by the user into the terminal.
 
     Returns:
-        bool: Returns True if the hashes (strings) are the same, 
+        bool: Returns True if the hashes (strings) are the same,
         and False otherwise.
     """
     return hash1.lower() == hash2.lower()
 
 
+# TODO: 1. Rework exit (Ctrl-C) 2. Cycle for main()
 def main() -> None:
     print(ART)
 
     # Выбор языка / Language selection
-    lang_choice = input(
-        "Select language / Выберите язык (en / ru): ").strip().lower()
+    lang_choice = (
+        input("Select language / Выберите язык (en / ru): ").strip().lower()
+    )
     if lang_choice not in LANGS:
         lang_choice = "en"
 
@@ -93,12 +91,14 @@ def main() -> None:
     lang_dict = LANGS[lang_choice]
 
     # Выбор хэша / Hash selection
-    hash_type = input("1 (SHA256) | 2 (MD5) | 3 (SHA1)\n"
-                      + lang_dict["select_hash"]).strip()
+    hash_type = input(
+        "1 (SHA256) | 2 (MD5) | 3 (SHA1)\n" + lang_dict["select_hash"]
+    ).strip()
     hash_type = HASHES.get(hash_type, "sha256")
 
-    comparison = input(
-        lang_dict["hash_comparison"] + "(y / n): ").strip().lower()
+    comparison = (
+        input(lang_dict["hash_comparison"] + "(y / n): ").strip().lower()
+    )
 
     print(lang_dict["exit_instructions"])
 
@@ -112,8 +112,9 @@ def main() -> None:
                 sys.exit()
 
             # Очистка от кавычек / Clearing quotes
-            if (file_path.startswith('"') and file_path.endswith('"')) or \
-                    (file_path.startswith("'") and file_path.endswith("'")):
+            if (file_path.startswith('"') and file_path.endswith('"')) or (
+                file_path.startswith("'") and file_path.endswith("'")
+            ):
                 file_path = file_path[1:-1]
             # Вычисление хэша / Calculating a hash
             file_hash = calculate_file_hash(file_path, hash_type)
