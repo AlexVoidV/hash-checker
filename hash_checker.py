@@ -122,9 +122,7 @@ def main() -> None:
                 user_input = input("\n" + lang_dict["path_prompt"]).strip()
 
                 if user_input.startswith("/"):
-                    if user_input == "/q":
-                        break
-                    elif user_input == "/quit":
+                    if user_input in ("/q", "/quit"):
                         break
                     elif user_input == "/h":
                         print(HELP)
