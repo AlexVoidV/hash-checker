@@ -5,7 +5,7 @@ A simple CLI program that calculates and optionally compares hash sums.
 
 ## Features
 - Calculates the file's hash
-- 3 hashes available: SHA256, MD5, SHA1
+- 4 hashes available: SHA256, MD5, SHA1, SHA512
 - Compares it to the entered hash (optional, use `/c`)
 
 ## Requirements
