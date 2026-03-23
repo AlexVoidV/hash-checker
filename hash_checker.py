@@ -44,11 +44,19 @@ ART = r"""
 |_|  |_/_/    \_\_____/|_|  |_|    \_____|_|  |_|______\_____|_|\_\______|_|  \_\
 """
 
-HELP = """
-/h – help (список команд)
-/q or (или) Ctrl-C – exit (выход)
-/t – change the type of hash (сменить тип хэша)
-/c – enable or disable comparison (включить или выключить сравнение)"""
+HELP_EN = """
+/h – help
+/q or Ctrl-C – exit
+/t – change the type of hash
+/c – enable or disable comparison"""
+
+HELP_RU = """
+/h – список команд
+/q или Ctrl-C – выход
+/t – сменить тип хэша
+/c – включить или выключить сравнение"""
+
+HELP_TEXTS = {"en": HELP_EN, "ru": HELP_RU}
 
 MSG_BOX = {"0": "[INFO]: ", "1": "[SUCCESS]: ", "2": "[FAILURE]: "}
 
@@ -89,8 +97,6 @@ def check_hashes(hash1: str, hash2: str) -> bool:
 def main() -> None:
     try:
         print(ART)
-        print(f"{HELP}", end="\n\n")
-
         # Выбор языка / Language selection
         lang_choice = (
             input("Select language / Выберите язык (en / ru): ")
@@ -99,6 +105,10 @@ def main() -> None:
         )
         if lang_choice not in LANGS:
             lang_choice = "en"
+
+        HELP = HELP_TEXTS.get(lang_choice, HELP_EN)
+
+        print(HELP, end="\n\n")
 
         # Выбранный словарь / Selected dictionary
         lang_dict = LANGS[lang_choice]
