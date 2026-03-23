@@ -23,7 +23,7 @@ LANGS = {
         "hash_prompt": "Введите предоставленный разработчиком хэш: ",
         "file_not_found": "Файл не найден!",
         "result_match": "Хэш совпадает!",
-        "result_mismatch": "Хэш не совпал!",
+        "result_mismatch": "Хэш НЕ совпал!",
         "display_file_hash": "Хэш указанного файла: ",
         "display_user_hash": "Введённый хэш:        ",
         "select_hash": "Выберите нужный тип хэша: ",
@@ -33,7 +33,7 @@ LANGS = {
     },
 }
 
-HASHES = {"1": "sha256", "2": "md5", "3": "sha1"}
+HASHES = {"1": "sha256", "2": "md5", "3": "sha1", "4": "sha512"}
 
 ART = r"""
  _    _           _____ _    _      _____ _    _ ______ _____ _  ________ _____  
@@ -112,13 +112,15 @@ def main() -> None:
                 if user_input.startswith("/"):
                     if user_input == "/q":
                         break
+                    elif user_input == "/quit":
+                        break
                     elif user_input == "/h":
                         print(HELP)
                         continue
                     elif user_input == "/t":
                         # Выбор хэша / Hash selection
                         hash_type = input(
-                            "1 (SHA256) | 2 (MD5) | 3 (SHA1)\n"
+                            "1 (SHA256) | 2 (MD5) | 3 (SHA1) | 4 (SHA512)\n"
                             + lang_dict["select_hash"]
                         ).strip()
                         hash_type = HASHES.get(hash_type, "sha256")
@@ -153,7 +155,7 @@ def main() -> None:
                         # Получить хэш от пользователя / Get a hash from a user
                         user_hash = input(lang_dict["hash_prompt"]).strip()
 
-                        n_sep = 107
+                        n_sep = len(lang_dict["display_file_hash"] + file_hash)
                         print("-" * n_sep)
 
                         # Вывести для сравнения / Display for comparison
@@ -162,9 +164,9 @@ def main() -> None:
 
                         # Результат / Result
                         if check_hashes(file_hash, user_hash):
-                            print(lang_dict["result_match"])
+                            print("[SUCCESS]: " + lang_dict["result_match"])
                         else:
-                            print(lang_dict["result_mismatch"])
+                            print("[FAILURE]: " + lang_dict["result_mismatch"])
                     else:
                         print(f"\n{file_hash}")
             except FileNotFoundError:
