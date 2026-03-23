@@ -146,6 +146,8 @@ def main() -> None:
                             .strip()
                             .lower()
                         )
+                        if not comparison:
+                            comparison = "n"
                         print(
                             MSG_BOX["0"]
                             + lang_dict["comparison"]
