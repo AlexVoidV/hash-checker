@@ -153,8 +153,9 @@ def main() -> None:
                         print(MSG_BOX["0"] + comparison_status)
                         continue
                 else:
-                    file_path = Path(user_input.strip().strip('"').strip("'"))
-
+                    clean_input = user_input.strip().strip('"').strip("'")
+                    file_path = Path(clean_input).expanduser().resolve()
+                    
                     if not file_path.exists() or not file_path.is_file():
                         raise FileNotFoundError
 
