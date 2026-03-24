@@ -145,15 +145,19 @@ def main() -> None:
                         continue
                     elif user_input == "/c":
                         comparison = not comparison
-                        comparison_status = lang_dict["enable_comparison"] if comparison else lang_dict["disable_comparison"]
+                        comparison_status = (
+                            lang_dict["enable_comparison"]
+                            if comparison
+                            else lang_dict["disable_comparison"]
+                        )
                         print(MSG_BOX["0"] + comparison_status)
                         continue
                 else:
                     file_path = Path(user_input.strip().strip('"').strip("'"))
-                    
+
                     if not file_path.exists() or not file_path.is_file():
                         raise FileNotFoundError
-                    
+
                     # Вычисление хэша / Calculating a hash
                     file_hash = calculate_file_hash(file_path, hash_type)
 
@@ -181,7 +185,7 @@ def main() -> None:
                 print(MSG_BOX["2"] + lang_dict["no_permission"])
 
     except KeyboardInterrupt:
-        print("\nExiting...") 
+        print("\nExiting...")
         sys.exit()
 
 
