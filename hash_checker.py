@@ -1,6 +1,6 @@
 import hashlib as hl
 import sys
-
+from pathlib import Path
 
 # Переводы / Translations
 LANGS = {
@@ -61,7 +61,7 @@ HELP_TEXTS = {"en": HELP_EN, "ru": HELP_RU}
 MSG_BOX = {"0": "[INFO]: ", "1": "[SUCCESS]: ", "2": "[FAILURE]: "}
 
 
-def calculate_file_hash(user_input: str, hash_type: str) -> str:
+def calculate_file_hash(file_path: Path, hash_type: str) -> str:
     """Calculates the hash of a file.
 
     Args:
@@ -73,7 +73,7 @@ def calculate_file_hash(user_input: str, hash_type: str) -> str:
         str: Hexadecimal hash string
     """
     hash_obj = hl.new(hash_type)
-    with open(user_input, "rb") as f:
+    with file_path.open("rb") as f:
         while chunk := f.read(4096):
             hash_obj.update(chunk)
     return hash_obj.hexdigest()
@@ -155,15 +155,13 @@ def main() -> None:
                         )
                         continue
                 else:
-                    # Очистка от кавычек / Clearing quotes
-                    if (
-                        user_input.startswith('"') and user_input.endswith('"')
-                    ) or (
-                        user_input.startswith("'") and user_input.endswith("'")
-                    ):
-                        user_input = user_input[1:-1]
+                    file_path = Path(user_input.strip().strip('"').strip("'"))
+                    
+                    if not file_path.exists() or not file_path.is_file():
+                        raise FileNotFoundError
+                    
                     # Вычисление хэша / Calculating a hash
-                    file_hash = calculate_file_hash(user_input, hash_type)
+                    file_hash = calculate_file_hash(file_path, hash_type)
 
                     if comparison == "y":
                         # Получить хэш от пользователя / Get a hash from a user
