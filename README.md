@@ -20,7 +20,9 @@ A simple CLI program that calculates and optionally compares hash sums.
     - `/q` – quit
 
 ## Build to `.exe`
-- Installing dependencies (use venv): `pip install pyinstaller` 
+- Installing dependencies (use venv): 
+    1. Using pip: `pip install pyinstaller` 
+    2. Or using uv: `uv sync --no-dev`
 - Building the application: `pyinstaller --onefile hash_checker.py`
 - The application will be in: dist/hash_checker.exe
 

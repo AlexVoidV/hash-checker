@@ -19,7 +19,9 @@
     - `/q` – выйти
 
 ## Сборка в `.exe`
-- Установка зависимостей (используйте venv): `pip install pyinstaller`
+- Установка зависимостей (используйте venv):
+    1. Используя pip: `pip install pyinstaller` 
+    2. Либо используя uv: `uv sync --no-dev`
 - Сборка: `pyinstaller --onefile hash_checker.py`
 - Приложение будет в: dist/hash_checker.exe
 
